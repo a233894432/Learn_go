@@ -46,11 +46,11 @@ func Func1() { // exported function Func1
 	a = ar[2:5]
 	//现在a含有的元素: ar[2]、ar[3]和ar[4]
 
-	fmt.Printf("The a  element is %d\n", a)
+	fmt.Printf("The a  element is %s\n", a)
 	// b是数组ar的另一个slice
 
 	b = ar[3:5]
 	// b的元素是：ar[3]和ar[4]
-	fmt.Printf("The b  element is %d\n", b)
+	fmt.Printf("The b  element is %s\n", b)
 
 }
