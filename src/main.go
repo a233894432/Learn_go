@@ -213,9 +213,21 @@
 //	fmt.Println("Obviously, now, the biggest one is", boxes.BiggestColor().String())
 //}
 
+//package main
+
+//import "fmt"
+
+//type Rect struct {
+//}
+
 package main
 
-import "fmt"
+import "github.com/kataras/iris"
 
-type Rect struct {
+func main() {
+	iris.Get("/hi", func(ctx *iris.Context) {
+		ctx.Write("Hi %s", "iris")
+	})
+	iris.Listen(":8080")
+	//err := iris.ListenWithErr(":8080")
 }
