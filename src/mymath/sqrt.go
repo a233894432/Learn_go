@@ -7,3 +7,7 @@ func Sqrt(x float64) float64 {
 	}
 	return z
 }
+
+func Plus(x int) int {
+	return 2 * x
+}

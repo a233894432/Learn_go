@@ -1,4 +1,2 @@
 *.exe
-pkg/
 bin/
-demo/demo
