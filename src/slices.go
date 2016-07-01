@@ -43,7 +43,6 @@ func main() {
 	//我们可以将声明和赋值放在一行。
 	t := []string{"g", "h", "i"}
 	fmt.Println("dcl:", t)
-	fmt.Println("sss", t[2])
 
 	//Slices可以被组合成多维数组。里面一维的slices对象可以不等长，这一点跟多维数组不太一样。
 	twoD := make([][]int, 3)
