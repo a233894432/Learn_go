@@ -17,5 +17,7 @@ func main() {
 	//		vals[i] = v
 	//	}
 	//	PrintAll(vals)
+
 	fmt.Println(names[0])
+
 }
