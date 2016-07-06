@@ -5,14 +5,16 @@ import (
 )
 
 func main() {
-
+LABEL1:
 	for i := 1; i < 10; i++ {
 		for {
 			fmt.Println(i)
-			goto LABEL1
+			continue LABEL1
 		}
 	}
-LABEL1:
+
 	fmt.Println("ok")
+
+	fmt.Println("okssss")
 
 }
