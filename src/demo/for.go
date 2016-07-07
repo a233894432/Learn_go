@@ -15,7 +15,7 @@ func main() {
 	}
 	fmt.Println(time.Now())
 	//一个精典的类型：带初始化/条件的循环
-	for j := 7; j <= 88; j++ {
+	for j := 7; j <= 10; j++ {
 		fmt.Println(j)
 	}
 
