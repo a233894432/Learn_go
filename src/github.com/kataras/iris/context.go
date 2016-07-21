@@ -1,6 +1,5 @@
 /*
-Context.go  Implements: ./context/context.go ,
-files: context_renderer.go, context_storage.go, context_request.go, context_response.go
+Context.go  Implements: ./context/context.go
 */
 
 package iris
@@ -11,7 +10,6 @@ import (
 	"encoding/json"
 	"encoding/xml"
 	"fmt"
-	"html/template"
 	"io"
 	"net"
 	"os"
@@ -27,7 +25,6 @@ import (
 	"github.com/iris-contrib/formBinder"
 	"github.com/kataras/iris/config"
 	"github.com/kataras/iris/context"
-	"github.com/kataras/iris/sessions/store"
 	"github.com/kataras/iris/utils"
 	"github.com/klauspost/compress/gzip"
 	"github.com/valyala/fasthttp"
@@ -42,8 +39,19 @@ const (
 	contentLength = "Content-Length"
 	// ContentHTML is the  string of text/html response headers
 	contentHTML = "text/html"
-	// ContentBINARY is the string of application/octet-stream response headers
-	contentBINARY = "application/octet-stream"
+	// ContentBinary header value for binary data.
+	contentBinary = "application/octet-stream"
+	// ContentJSON header value for JSON data.
+	contentJSON = "application/json"
+	// ContentJSONP header value for JSONP data.
+	contentJSONP = "application/javascript"
+	// ContentText header value for Text data.
+	contentText = "text/plain"
+	// ContentXML header value for XML data.
+	contentXML = "text/xml"
+
+	// contentMarkdown custom key/content type, the real is the text/html
+	contentMarkdown = "text/markdown"
 
 	// LastModified "Last-Modified"
 	lastModified = "Last-Modified"
@@ -54,6 +62,11 @@ const (
 
 	// stopExecutionPosition used inside the Context, is the number which shows us that the context's middleware manualy stop the execution
 	stopExecutionPosition = 255
+	// used inside GetFlash to store the lifetime request flash messages
+	flashMessagesStoreContextKey = "_iris_flash_messages_"
+	flashMessageCookiePrefix     = "_iris_flash_message_"
+	cookieHeaderID               = "Cookie: "
+	cookieHeaderIDLen            = len(cookieHeaderID)
 )
 
 // this pool is used everywhere needed in the iris for example inside party-> Static
@@ -73,7 +86,9 @@ var (
 )
 
 type (
+
 	// Map is just a conversion for a map[string]interface{}
+	// should not be used inside Render when PongoEngine is used.
 	Map map[string]interface{}
 	// Context is resetting every time a request is coming to the server
 	// it is not good practice to use this object in goroutines, for these cases use the .Clone()
@@ -82,8 +97,8 @@ type (
 		Params    PathParameters
 		framework *Framework
 		//keep track all registed middleware (handlers)
-		middleware   Middleware
-		sessionStore store.IStore
+		middleware Middleware
+		session    *session
 		// pos is the position number of the Context, look .Next to understand
 		pos uint8
 	}
@@ -101,7 +116,7 @@ func (ctx *Context) GetRequestCtx() *fasthttp.RequestCtx {
 // I use it for zero rellocation memory
 func (ctx *Context) Reset(reqCtx *fasthttp.RequestCtx) {
 	ctx.Params = ctx.Params[0:0]
-	ctx.sessionStore = nil
+	ctx.session = nil
 	ctx.middleware = nil
 	ctx.RequestCtx = reqCtx
 }
@@ -216,16 +231,21 @@ func (ctx *Context) HostString() string {
 func (ctx *Context) VirtualHostname() string {
 	realhost := ctx.HostString()
 	hostname := realhost
-	virtualhost := ctx.framework.HTTPServer.VirtualHostname()
+	virtualhost := ctx.framework.Servers.Main().Hostname()
 
 	if portIdx := strings.IndexByte(hostname, ':'); portIdx > 0 {
 		hostname = hostname[0:portIdx]
 	}
 	if idxDotAnd := strings.LastIndexByte(hostname, '.'); idxDotAnd > 0 {
 		s := hostname[idxDotAnd:]
+		// means that we have the request's host mymachine.com or 127.0.0.1/0.0.0.0, but for the second option we will need to replace it with the hostname that the dev was registered
+		// this needed to parse correct the {{ url }} iris global template engine's function
 		if s == ".1" {
 			hostname = strings.Replace(hostname, "127.0.0.1", virtualhost, 1)
+		} else if s == ".0" {
+			hostname = strings.Replace(hostname, "0.0.0.0", virtualhost, 1)
 		}
+		//
 	} else {
 		hostname = strings.Replace(hostname, "localhost", virtualhost, 1)
 	}
@@ -282,13 +302,13 @@ func (ctx *Context) RequestHeader(k string) string {
 	return utils.BytesToString(ctx.RequestCtx.Request.Header.Peek(k))
 }
 
-// PostFormValue returns a single value from post request's data
-func (ctx *Context) PostFormValue(name string) string {
+// FormValueString returns a single value, as string, from post request's data
+func (ctx *Context) FormValueString(name string) string {
 	return string(ctx.FormValue(name))
 }
 
-// PostFormMulti returns a slice of string from post request's data
-func (ctx *Context) PostFormMulti(name string) []string {
+// FormValues returns a slice of string from post request's data
+func (ctx *Context) FormValues(name string) []string {
 	arrBytes := ctx.PostArgs().PeekMulti(name)
 	arrStr := make([]string, len(arrBytes))
 	for i, v := range arrBytes {
@@ -312,7 +332,7 @@ func (ctx *Context) Subdomain() (subdomain string) {
 // use it only for special cases, when the default behavior doesn't suits you.
 //
 // http://www.blooberry.com/indexdot/html/topics/urlencoding.htm
-/* Credits to Manish Singh @kryptodev for URLEncode */
+/* Credits to Manish Singh @kryptodev for URLEncode by post issue share code */
 func URLEncode(path string) string {
 	if path == "" {
 		return ""
@@ -417,7 +437,7 @@ func (ctx *Context) SetHeader(k string, v string) {
 // first parameter is the url to redirect
 // second parameter is the http status should send, default is 302 (StatusFound), you can set it to 301 (Permant redirect), if that's nessecery
 func (ctx *Context) Redirect(urlToRedirect string, statusHeader ...int) {
-	httpStatus := StatusFound // temporary redirect
+	httpStatus := StatusFound // a 'temporary-redirect-like' wich works better than for our purpose
 	if statusHeader != nil && len(statusHeader) > 0 && statusHeader[0] > 0 {
 		httpStatus = statusHeader[0]
 	}
@@ -457,33 +477,42 @@ func (ctx *Context) Write(format string, a ...interface{}) {
 	ctx.RequestCtx.WriteString(fmt.Sprintf(format, a...))
 }
 
-// HTML writes html string with a http status
-func (ctx *Context) HTML(httpStatus int, htmlContents string) {
-	ctx.SetContentType(contentHTML + ctx.framework.rest.CompiledCharset)
-	ctx.RequestCtx.SetStatusCode(httpStatus)
-	ctx.RequestCtx.WriteString(htmlContents)
+// Gzip accepts bytes, which are compressed to gzip format and sent to the client
+func (ctx *Context) Gzip(b []byte, status int) {
+	ctx.RequestCtx.Response.Header.Add("Content-Encoding", "gzip")
+	gzipWriter := ctx.framework.gzipWriterPool.Get().(*gzip.Writer)
+	gzipWriter.Reset(ctx.RequestCtx.Response.BodyWriter())
+	gzipWriter.Write(b)
+	gzipWriter.Close()
+	ctx.framework.gzipWriterPool.Put(gzipWriter)
 }
 
-// Data writes out the raw bytes as binary data.
-func (ctx *Context) Data(status int, v []byte) error {
-	return ctx.framework.rest.Data(ctx.RequestCtx, status, v)
-}
-
-// RenderWithStatus builds up the response from the specified template and bindings.
-// Note: parameter layout has meaning only when using the iris.HTMLTemplate
-func (ctx *Context) RenderWithStatus(status int, name string, binding interface{}, layout ...string) error {
+// RenderWithStatus builds up the response from the specified template or a response engine.
+// Note: the options: "gzip" and "charset" are built'n support by Iris, so you can pass these on any template engine or response engine
+func (ctx *Context) RenderWithStatus(status int, name string, binding interface{}, options ...map[string]interface{}) error {
 	ctx.SetStatusCode(status)
-	return ctx.framework.templates.Render(ctx, name, binding, layout...)
+	if strings.IndexByte(name, '.') > 0 { //we have template
+		return ctx.framework.templates.getBy(name).execute(ctx, name, binding, options...)
+	}
+	return ctx.framework.responses.getBy(name).render(ctx, binding, options...)
 }
 
-// Render same as .RenderWithStatus but with status to iris.StatusOK (200)
-func (ctx *Context) Render(name string, binding interface{}, layout ...string) error {
-	return ctx.RenderWithStatus(StatusOK, name, binding, layout...)
+// Render same as .RenderWithStatus but with status to iris.StatusOK (200) if no previous status exists
+// builds up the response from the specified template or a response engine.
+// Note: the options: "gzip" and "charset" are built'n support by Iris, so you can pass these on any template engine or response engine
+func (ctx *Context) Render(name string, binding interface{}, options ...map[string]interface{}) error {
+	errCode := ctx.RequestCtx.Response.StatusCode()
+	if errCode <= 0 {
+		errCode = StatusOK
+	}
+	return ctx.RenderWithStatus(errCode, name, binding, options...)
 }
 
 // MustRender same as .Render but returns 500 internal server http status (error) if rendering fail
-func (ctx *Context) MustRender(name string, binding interface{}, layout ...string) {
-	if err := ctx.Render(name, binding, layout...); err != nil {
+// builds up the response from the specified template or a response engine.
+// Note: the options: "gzip" and "charset" are built'n support by Iris, so you can pass these on any template engine or response engine
+func (ctx *Context) MustRender(name string, binding interface{}, options ...map[string]interface{}) {
+	if err := ctx.Render(name, binding, options...); err != nil {
 		ctx.Panic()
 		ctx.framework.Logger.Dangerf("MustRender panics for client with IP: %s On template: %s.Trace: %s\n", ctx.RemoteAddr(), name, err)
 	}
@@ -491,33 +520,47 @@ func (ctx *Context) MustRender(name string, binding interface{}, layout ...strin
 
 // TemplateString accepts a template filename, its context data and returns the result of the parsed template (string)
 // if any error returns empty string
-func (ctx *Context) TemplateString(name string, binding interface{}, layout ...string) string {
-	return ctx.framework.TemplateString(name, binding, layout...)
+func (ctx *Context) TemplateString(name string, binding interface{}, options ...map[string]interface{}) string {
+	return ctx.framework.TemplateString(name, binding, options...)
+}
+
+// HTML writes html string with a http status
+func (ctx *Context) HTML(status int, htmlContents string) {
+	if err := ctx.RenderWithStatus(status, contentHTML, htmlContents); err != nil {
+		ctx.SetContentType(contentHTML + "; charset=" + ctx.framework.Config.Charset)
+		ctx.RequestCtx.SetStatusCode(status)
+		ctx.RequestCtx.WriteString(htmlContents)
+	}
+}
+
+// Data writes out the raw bytes as binary data.
+func (ctx *Context) Data(status int, v []byte) error {
+	return ctx.RenderWithStatus(status, contentBinary, v)
 }
 
 // JSON marshals the given interface object and writes the JSON response.
 func (ctx *Context) JSON(status int, v interface{}) error {
-	return ctx.framework.rest.JSON(ctx.RequestCtx, status, v)
+	return ctx.RenderWithStatus(status, contentJSON, v)
 }
 
 // JSONP marshals the given interface object and writes the JSON response.
 func (ctx *Context) JSONP(status int, callback string, v interface{}) error {
-	return ctx.framework.rest.JSONP(ctx.RequestCtx, status, callback, v)
+	return ctx.RenderWithStatus(status, contentJSONP, v, map[string]interface{}{"callback": callback})
 }
 
 // Text writes out a string as plain text.
 func (ctx *Context) Text(status int, v string) error {
-	return ctx.framework.rest.Text(ctx.RequestCtx, status, v)
+	return ctx.RenderWithStatus(status, contentText, v)
 }
 
 // XML marshals the given interface object and writes the XML response.
 func (ctx *Context) XML(status int, v interface{}) error {
-	return ctx.framework.rest.XML(ctx.RequestCtx, status, v)
+	return ctx.RenderWithStatus(status, contentXML, v)
 }
 
 // MarkdownString parses the (dynamic) markdown string and returns the converted html string
 func (ctx *Context) MarkdownString(markdownText string) string {
-	return ctx.framework.rest.Markdown([]byte(markdownText))
+	return ctx.framework.ResponseString(contentMarkdown, markdownText)
 }
 
 // Markdown parses and renders to the client a particular (dynamic) markdown string
@@ -526,17 +569,6 @@ func (ctx *Context) MarkdownString(markdownText string) string {
 // second is the markdown string
 func (ctx *Context) Markdown(status int, markdown string) {
 	ctx.HTML(status, ctx.MarkdownString(markdown))
-}
-
-// ExecuteTemplate executes a simple html template, you can use that if you already have the cached templates
-// the recommended way to render is to use iris.Templates("./templates/path/*.html") and ctx.RenderFile("filename.html",struct{})
-// accepts 2 parameters
-// the first parameter is the template (*template.Template)
-// the second parameter is the page context (interfac{})
-// returns an error if any errors occurs while executing this template
-func (ctx *Context) ExecuteTemplate(tmpl *template.Template, pageContext interface{}) error {
-	ctx.RequestCtx.SetContentType(contentHTML + ctx.framework.rest.CompiledCharset)
-	return errTemplateExecute.With(tmpl.Execute(ctx.RequestCtx.Response.BodyWriter(), pageContext))
 }
 
 // ServeContent serves content, headers are autoset
@@ -685,6 +717,28 @@ func (ctx *Context) Set(key string, value interface{}) {
 	ctx.RequestCtx.SetUserValue(key, value)
 }
 
+// VisitAllCookies takes a visitor which loops on each (request's) cookie key and value
+//
+// Note: the method ctx.Request.Header.VisitAllCookie by fasthttp, has a strange bug which I cannot solve at the moment.
+// This is the reason which this function exists and should be used instead of fasthttp's built'n.
+func (ctx *Context) VisitAllCookies(visitor func(key string, value string)) {
+	// strange bug, this doesnt works also: 	cookieHeaderContent := ctx.Request.Header.Peek("Cookie")/User-Agent tested also
+	headerbody := string(ctx.Request.Header.Header())
+	headerlines := strings.Split(headerbody, "\n")
+	for _, s := range headerlines {
+		if len(s) > cookieHeaderIDLen {
+			if s[0:cookieHeaderIDLen] == cookieHeaderID {
+				contents := s[cookieHeaderIDLen:]
+				values := strings.Split(contents, "; ")
+				for _, s := range values {
+					keyvalue := strings.SplitN(s, "=", 2)
+					visitor(keyvalue[0], keyvalue[1])
+				}
+			}
+		}
+	}
+}
+
 // GetCookie returns cookie's value by it's name
 // returns empty string if nothing was found
 func (ctx *Context) GetCookie(name string) (val string) {
@@ -713,78 +767,148 @@ func (ctx *Context) SetCookieKV(key, value string) {
 
 // RemoveCookie deletes a cookie by it's name/key
 func (ctx *Context) RemoveCookie(name string) {
+	ctx.Response.Header.DelCookie(name)
+
 	cookie := fasthttp.AcquireCookie()
 	cookie.SetKey(name)
 	cookie.SetValue("")
 	cookie.SetPath("/")
 	cookie.SetHTTPOnly(true)
-	exp := time.Now().Add(-time.Duration(1) * time.Minute) //RFC says 1 second, but make sure 1 minute because we are using fasthttp
+	exp := time.Now().Add(-time.Duration(1) * time.Minute) //RFC says 1 second, but let's do it 1 minute to make sure is working...
 	cookie.SetExpire(exp)
 	ctx.Response.Header.SetCookie(cookie)
 	fasthttp.ReleaseCookie(cookie)
+	// delete request's cookie also, which is temporarly available
+	ctx.Request.Header.DelCookie(name)
+
+}
+
+// GetFlashes returns all the flash messages for available for this request
+func (ctx *Context) GetFlashes() map[string]string {
+	// if already taken at least one time, this will be filled
+	if messages := ctx.Get(flashMessagesStoreContextKey); messages != nil {
+		if m, isMap := messages.(map[string]string); isMap {
+			return m
+		}
+	} else {
+		flashMessageFound := false
+		// else first time, get all flash cookie keys(the prefix will tell us which is a flash message), and after get all one-by-one using the GetFlash.
+		flashMessageCookiePrefixLen := len(flashMessageCookiePrefix)
+		ctx.VisitAllCookies(func(key string, value string) {
+			if len(key) > flashMessageCookiePrefixLen {
+				if key[0:flashMessageCookiePrefixLen] == flashMessageCookiePrefix {
+					unprefixedKey := key[flashMessageCookiePrefixLen:]
+					_, err := ctx.GetFlash(unprefixedKey) // this func will add to the list (flashMessagesStoreContextKey) also
+					if err == nil {
+						flashMessageFound = true
+					}
+				}
+
+			}
+		})
+		// if we found at least one flash message then re-execute this function to return the list
+		if flashMessageFound {
+			return ctx.GetFlashes()
+		}
+	}
+	return nil
+}
+
+func (ctx *Context) decodeFlashCookie(key string) (string, string) {
+	cookieKey := flashMessageCookiePrefix + key
+	cookieValue := string(ctx.RequestCtx.Request.Header.Cookie(cookieKey))
+
+	if cookieValue != "" {
+		v, e := base64.URLEncoding.DecodeString(cookieValue)
+		if e == nil {
+			return cookieKey, string(v)
+		}
+	}
+	return "", ""
 }
 
 // GetFlash get a flash message by it's key
-// after this action the messages is removed
-// returns string, if the cookie doesn't exists the string is empty
-func (ctx *Context) GetFlash(key string) string {
-	val, err := ctx.GetFlashBytes(key)
-	if err != nil {
-		return ""
-	}
-	return string(val)
-}
+// returns the value as string and an error
+//
+// if the cookie doesn't exists the string is empty and the error is filled
+// after the request's life the value is removed
+func (ctx *Context) GetFlash(key string) (string, error) {
 
-// GetFlashBytes get a flash message by it's key
-// after this action the messages is removed
-// returns []byte along with an error if the cookie doesn't exists or decode fails
-func (ctx *Context) GetFlashBytes(key string) (value []byte, err error) {
-	cookieValue := string(ctx.RequestCtx.Request.Header.Cookie(key))
-	if cookieValue == "" {
-		err = errFlashNotFound.Return()
-	} else {
-		value, err = base64.URLEncoding.DecodeString(cookieValue)
-		//remove the message
-		ctx.RemoveCookie(key)
-		//it should'b be removed until the next reload, so we don't do that: ctx.Request.Header.SetCookie(key, "")
+	// first check if flash exists from this request's lifetime, if yes return that else continue to get the cookie
+	storeExists := false
+
+	if messages := ctx.Get(flashMessagesStoreContextKey); messages != nil {
+		m, isMap := messages.(map[string]string)
+		if !isMap {
+			return "", fmt.Errorf("Flash store is not a map[string]string. This suppose will never happen, please report this bug.")
+		}
+		storeExists = true // in order to skip the check later
+		for k, v := range m {
+			if k == key && v != "" {
+				return v, nil
+			}
+		}
 	}
-	return
+
+	cookieKey, cookieValue := ctx.decodeFlashCookie(key)
+	if cookieValue == "" {
+		return "", errFlashNotFound.Return()
+	}
+	// store this flash message to the lifetime request's local storage,
+	// I choose this method because no need to store it if not used at all
+	if storeExists {
+		ctx.Get(flashMessagesStoreContextKey).(map[string]string)[key] = cookieValue
+	} else {
+		flashStoreMap := make(map[string]string)
+		flashStoreMap[key] = cookieValue
+		ctx.Set(flashMessagesStoreContextKey, flashStoreMap)
+	}
+
+	//remove the real cookie, no need to have that, we stored it on lifetime request
+	ctx.RemoveCookie(cookieKey)
+	return cookieValue, nil
+	//it should'b be removed until the next reload, so we don't do that: ctx.Request.Header.SetCookie(key, "")
+
 }
 
 // SetFlash sets a flash message, accepts 2 parameters the key(string) and the value(string)
+// the value will be available on the NEXT request
 func (ctx *Context) SetFlash(key string, value string) {
-	ctx.SetFlashBytes(key, utils.StringToBytes(value))
-}
-
-// SetFlashBytes sets a flash message, accepts 2 parameters the key(string) and the value([]byte)
-func (ctx *Context) SetFlashBytes(key string, value []byte) {
 	c := fasthttp.AcquireCookie()
-	c.SetKey(key)
-	c.SetValue(base64.URLEncoding.EncodeToString(value))
+	c.SetKey(flashMessageCookiePrefix + key)
+	c.SetValue(base64.URLEncoding.EncodeToString([]byte(value)))
 	c.SetPath("/")
 	c.SetHTTPOnly(true)
 	ctx.RequestCtx.Response.Header.SetCookie(c)
 	fasthttp.ReleaseCookie(c)
 }
 
-// Session returns the current session store, returns nil if provider is ""
-func (ctx *Context) Session() store.IStore {
-	if ctx.framework.sessions == nil || ctx.framework.Config.Sessions.Provider == "" { //the second check can be changed on runtime, users are able to  turn off the sessions by setting provider to  ""
+// Session returns the current session
+func (ctx *Context) Session() interface {
+	ID() string
+	Get(string) interface{}
+	GetString(key string) string
+	GetInt(key string) int
+	GetAll() map[string]interface{}
+	VisitAll(cb func(k string, v interface{}))
+	Set(string, interface{})
+	Delete(string)
+	Clear()
+} {
+	if ctx.framework.sessions == nil { // this should never return nil but FOR ANY CASE, on future changes.
 		return nil
 	}
 
-	if ctx.sessionStore == nil {
-		ctx.sessionStore = ctx.framework.sessions.Start(ctx)
+	if ctx.session == nil {
+		ctx.session = ctx.framework.sessions.start(ctx)
 	}
-	return ctx.sessionStore
+	return ctx.session
 }
 
 // SessionDestroy destroys the whole session, calls the provider's destroy and remove the cookie
 func (ctx *Context) SessionDestroy() {
-	if ctx.framework.sessions != nil {
-		if store := ctx.Session(); store != nil {
-			ctx.framework.sessions.Destroy(ctx)
-		}
+	if sess := ctx.Session(); sess != nil {
+		ctx.framework.sessions.destroy(ctx)
 	}
 
 }

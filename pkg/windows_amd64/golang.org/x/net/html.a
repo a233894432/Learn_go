@@ -1,7 +1,7 @@
 !<arch>
 __.PKGDEF       0           0     0     644     9705      `
-go object windows amd64 go1.6.2 X:none
-build id "79568ef1c86c3b7b3dea514bfffac286ddd4f992"
+go object windows amd64 go1.6.3 X:none
+build id "ba5fc1c6ed6da61a17e05d2f82687cb88e181585"
 
 $$
 package html
@@ -85,7 +85,7 @@ package html
 
 $$
  _go_.o          0           0     0     644     1012899   `
-go object windows amd64 go1.6.2 X:none
+go object windows amd64 go1.6.3 X:none
 
 !
   go13ldstrings.abytes.aunicode/utf8.a8golang.org/x/net/html/atom.aerrors.a

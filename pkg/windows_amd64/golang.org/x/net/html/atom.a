@@ -1,7 +1,7 @@
 !<arch>
 __.PKGDEF       0           0     0     644     18000     `
-go object windows amd64 go1.6.2 X:none
-build id "e8a24d191ed33f38d45a2e03bdd722836eca7201"
+go object windows amd64 go1.6.3 X:none
+build id "e896aa9e2981fc036eaf2cb19c78b7e92b78a145"
 
 $$
 package atom
@@ -350,7 +350,7 @@ package atom
 
 $$
 _go_.o          0           0     0     644     26805     `
-go object windows amd64 go1.6.2 X:none
+go object windows amd64 go1.6.3 X:none
 
 !
   go13ld ş"".Atom.String      eH‹%(   H‹‰    H;avl‹D$1Û‰ÁÁèáÿ   ‰ÃËû.  v1ÛH‰\$H‰\$Ã‰ÃË‰ÙH    ‹èD‹ÁIø.  w L9ÅwL‹I)èIƒø tM)L‰L$L‰D$Ãè    è    étÿÿÿÌÌÌÌ      ’  $"".hdr..gostring.1   ø  $runtime.panicslice   †  0runtime.morestack_noctxt   0   "".~r0 type.string "".a  type."".Atom   2B 

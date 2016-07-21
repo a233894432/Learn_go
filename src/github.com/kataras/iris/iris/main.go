@@ -3,15 +3,14 @@ package main
 import (
 	"os"
 
+	"github.com/iris-contrib/logger"
 	"github.com/kataras/cli"
 	"github.com/kataras/iris"
-	"github.com/kataras/iris/config"
-	"github.com/kataras/iris/logger"
 )
 
 const (
 	// Version of Iris command line tool
-	Version = "0.0.8"
+	Version = "0.0.9"
 )
 
 var (
@@ -49,7 +48,7 @@ func init() {
 	app.Command(runAndWatchCmd)
 
 	// init the logger
-	printer = logger.New(config.DefaultLogger())
+	printer = logger.New(logger.DefaultConfig())
 }
 
 func main() {
