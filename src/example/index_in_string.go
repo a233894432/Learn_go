@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	var str string = "Hi, I'm Marc, Hi."
+	var str string = "Ei, I'm Marc, Ei."
 
 	fmt.Printf("The position of \"Marc\" is: ")
 	fmt.Printf("%d\n", strings.Index(str, "Marc"))
