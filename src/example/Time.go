@@ -27,8 +27,9 @@ func main() {
 	untime:=t.Unix()
 	fmt.Println(untime)
 
-	fmt.Println(t.Day())
 
+
+	fmt.Println(t.Format(time.StampMilli))
 
 
 }
