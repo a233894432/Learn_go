@@ -1,28 +1,10 @@
-[![Iris Logo](http://iris-go.com/assets/iris_full_logo_2.png)](http://iris-go.com)
+[![Iris Logo](https://raw.githubusercontent.com/iris-contrib/website/gh-pages/assets/iris_full_logo_2.png)](http://iris-go.com)
 
 [![Travis Widget]][Travis] [![Release Widget]][Release] [![Report Widget]][Report] [![License Widget]][License] [![Chat Widget]][Chat] [![Documentation Widget]][Documentation]
 
-[Travis Widget]: https://img.shields.io/travis/kataras/iris.svg?style=flat-square
-[Travis]: http://travis-ci.org/kataras/iris
-[License Widget]: https://img.shields.io/badge/license-MIT%20%20License%20-E91E63.svg?style=flat-square
-[License]: https://github.com/kataras/iris/blob/master/LICENSE
-[Release Widget]: https://img.shields.io/badge/release-v3.0.0--rc.4-blue.svg?style=flat-square
-[Release]: https://github.com/kataras/iris/releases
-[Chat Widget]: https://img.shields.io/badge/Rocket.Chat-JOIN%20CHAT-00BCD4.svg?style=flat-square
-[Chat]: https://kataras.rocket.chat/channel/iris
-[Report Widget]: https://img.shields.io/badge/report%20card-A%2B-F44336.svg?style=flat-square
-[Report]: http://goreportcard.com/report/kataras/iris
-[Documentation Widget]: https://img.shields.io/badge/documentation-reference-5272B4.svg?style=flat-square
-[Documentation]: https://www.gitbook.com/book/kataras/iris/details
-[Language Widget]: https://img.shields.io/badge/powered_by-Go-3362c2.svg?style=flat-square
-[Language]: http://golang.org
-[Platform Widget]: https://img.shields.io/badge/platform-Any--OS-gray.svg?style=flat-square
-
 The fastest web framework for Go.
 
-[Easy](https://github.com/iris-contrib/examples) to [learn](https://www.gitbook.com/book/kataras/iris/details) while, at the same time, providing robust set of features for building modern web applications.
-
-[![Benchmark Wizzard Processing Time Horizontal Graph](https://raw.githubusercontent.com/iris-contrib/website/cf71811e6acb2f9bf1e715e25660392bf090b923/assets/benchmark_horizontal_transparent.png)](https://github.com/smallnest/go-web-framework-benchmark)
+[![Alt: Benchmark Wizzard July 21, 2016- Processing Time Horizontal Graph](https://raw.githubusercontent.com/smallnest/go-web-framework-benchmark/4db507a22c964c9bc9774c5b31afdc199a0fe8b7/benchmark.png)](#benchmarks)
 
 
 ```bash
@@ -37,21 +19,13 @@ func main() {
 		c.JSON(iris.StatusOK, iris.Map{
 			"Name":  "Iris",
 			"Born":  "13 March 2016",
-			"Stars": 3693,
+			"Stars": 4420,
 		})
 	})
 	iris.Listen(":8080")
 }
 ```
 > Learn more about [render](https://kataras.gitbooks.io/iris/content/render.html)
-
-```bash
-$ iris run render_json.go
-```
-
-> Runs & monitors for file changes, learn more about [cli](https://github.com/kataras/iris/tree/master/iris).
-
-
 
 Installation
 ------------
@@ -61,18 +35,19 @@ The only requirement is the [Go Programming Language](https://golang.org/dl), at
 $ go get -u github.com/kataras/iris/iris
 ```
 
- >If you have installation issues and you are connected to the Internet through China please, [click here](https://kataras.gitbooks.io/iris/content/install.html).
+ >If you have installation issues or you are connected to the Internet through China please, [click here](https://kataras.gitbooks.io/iris/content/install.html).
 
 FAQ
 ------------
-Explore [these questions](https://github.com/kataras/iris/issues?q=label%3Aquestion) or navigate [here][CHAT].
+Explore [these questions](https://github.com/kataras/iris/issues?q=label%3Aquestion) or navigate to the [community chat][Chat].
 
 
 Features
 ------------
 - Focus on high performance
 - Robust routing supports static and wildcard subdomains
-- View system supporting [6+](https://kataras.gitbooks.io/iris/content/render_templates.html) template engines
+- View system supporting [6+](https://kataras.gitbooks.io/iris/content/template-engines.html) template engines
+- Add custom [renders/responses](https://github.com/iris-contrib/examples/tree/master/response_engines/my_custom_response/main.go) or customize & replace the [defaults](https://github.com/iris-contrib/response/) (`context.JSON/JSONP/XML/Markdown/Text/Binary(...)`)
 - Highly scalable Websocket API with custom events
 - Sessions support with GC, memory & redis providers
 - Middlewares & Plugins were never be easier
@@ -91,6 +66,18 @@ Features
 
 | Name        | Description           | Usage  |
 | ------------------|:---------------------:|-------:|
+| [JSON ](https://github.com/iris-contrib/response/tree/master/json)      | JSON Response Engine (Default)                  |[example 1](https://github.com/iris-contrib/examples/blob/master/response_engines/json_1/main.go),[example 2](https://github.com/iris-contrib/examples/blob/master/response_engines/json_2/main.go), [book section](https://kataras.gitbooks.io/iris/content/response-engines.html)
+| [JSONP ](https://github.com/iris-contrib/response/tree/master/jsonp)      | JSONP Response Engine (Default)                  |[example 1](https://github.com/iris-contrib/examples/blob/master/response_engines/jsonp_1/main.go),[example 2](https://github.com/iris-contrib/examples/blob/master/response_engines/jsonp_2/main.go), [book section](https://kataras.gitbooks.io/iris/content/response-engines.html)
+| [XML ](https://github.com/iris-contrib/response/tree/master/xml)      | XML Response Engine (Default)                  |[example 1](https://github.com/iris-contrib/examples/blob/master/response_engines/xml_1/main.go),[example 2](https://github.com/iris-contrib/examples/blob/master/response_engines/xml_2/main.go), [book section](https://kataras.gitbooks.io/iris/content/response-engines.html)
+| [Markdown ](https://github.com/iris-contrib/response/tree/master/markdown)      | Markdown Response Engine (Default)                  |[example 1](https://github.com/iris-contrib/examples/blob/master/response_engines/markdown_1/main.go),[example 2](https://github.com/iris-contrib/examples/blob/master/response_engines/markdown_2/main.go), [book section](https://kataras.gitbooks.io/iris/content/response-engines.html)
+| [Text](https://github.com/iris-contrib/response/tree/master/text)      | Text Response Engine (Default)                  |[example 1](https://github.com/iris-contrib/examples/blob/master/response_engines/text_1/main.go), [book section](https://kataras.gitbooks.io/iris/content/response-engines.html)
+| [Binary Data ](https://github.com/iris-contrib/response/tree/master/data)      | Binary Data Response Engine (Default)                  |[example 1](https://github.com/iris-contrib/examples/blob/master/response_engines/data_1/main.go), [book section](https://kataras.gitbooks.io/iris/content/response-engines.html)
+| [HTML/Default Engine ](https://github.com/iris-contrib/template/tree/master/html)      | HTML Template Engine (Default)                  |[example ](https://github.com/iris-contrib/examples/blob/master/template_engines/template_html_0/main.go), [book section](https://kataras.gitbooks.io/iris/content/template-engines.html)
+| [Django Engine ](https://github.com/iris-contrib/template/tree/master/django)      | Django Template Engine                  |[example ](https://github.com/iris-contrib/examples/blob/master/template_engines/template_django_1/main.go), [book section](https://kataras.gitbooks.io/iris/content/template-engines.html)
+| [Pug/Jade Engine ](https://github.com/iris-contrib/template/tree/master/pug)      | Pug Template Engine                  |[example ](https://github.com/iris-contrib/examples/blob/master/template_engines/template_pug_1/main.go), [book section](https://kataras.gitbooks.io/iris/content/template-engines.html)
+| [Handlebars Engine ](https://github.com/iris-contrib/template/tree/master/handlebars)      | Handlebars Template Engine                  |[example ](https://github.com/iris-contrib/examples/blob/master/template_engines/template_handlebars_1/main.go), [book section](https://kataras.gitbooks.io/iris/content/template-engines.html)
+| [Amber Engine ](https://github.com/iris-contrib/template/tree/master/amber)      | Amber Template Engine                  |[example ](https://github.com/iris-contrib/examples/blob/master/template_engines/template_amber_1/main.go), [book section](https://kataras.gitbooks.io/iris/content/template-engines.html)
+| [Markdown Engine ](https://github.com/iris-contrib/template/tree/master/markdown)      | Markdown Template Engine                  |[example ](https://github.com/iris-contrib/examples/blob/master/template_engines/template_markdown_1/main.go), [book section](https://kataras.gitbooks.io/iris/content/template-engines.html)
 | [Basicauth Middleware ](https://github.com/iris-contrib/middleware/tree/master/basicauth)      | HTTP Basic authentication                  |[example 1](https://github.com/iris-contrib/examples/blob/master/middleware_basicauth_1/main.go), [example 2](https://github.com/iris-contrib/examples/blob/master/middleware_basicauth_2/main.go), [book section](https://kataras.gitbooks.io/iris/content/basic-authentication.html)  |
 | [JWT Middleware ](https://github.com/iris-contrib/middleware/tree/master/jwt)      | JSON Web Tokens                  |[example ](https://github.com/iris-contrib/examples/blob/master/middleware_jwt/main.go), [book section](https://kataras.gitbooks.io/iris/content/jwt.html)  |
 | [Cors Middleware ](https://github.com/iris-contrib/middleware/tree/master/cors)      | Cross Origin Resource Sharing W3 specification   | [how to use ](https://github.com/iris-contrib/middleware/tree/master/cors#how-to-use)  |
@@ -106,10 +93,10 @@ Features
 Docs & Community
 ------------
 
-<a href="https://www.gitbook.com/book/kataras/iris/details"><img align="right" width="185" src="http://iris-go.com/assets/book/cover_1.png"></a>
+<a href="https://www.gitbook.com/book/kataras/iris/details"><img align="right" width="185" src="https://raw.githubusercontent.com/iris-contrib/website/gh-pages/assets/book/cover_1.png"></a>
 
 
-- Read the [book](https://www.gitbook.com/book/kataras/iris/details) or [wiki](https://github.com/kataras/iris/wiki)
+- Read the [book](https://www.gitbook.com/book/kataras/iris/details)
 
 - Take a look at the [examples](https://github.com/iris-contrib/examples)
 
@@ -119,7 +106,7 @@ Docs & Community
 If you'd like to discuss this package, or ask questions about it, feel free to
 
 * Post an issue or  idea [here](https://github.com/kataras/iris/issues)
-* [Chat][CHAT]
+* [Chat][Chat]
 
 Open debates
 
@@ -133,49 +120,53 @@ The Iris philosophy is to provide robust tooling for HTTP, making it a great sol
 
 Iris does not force you to use any specific ORM or template engine. With support for the most used template engines, you can quickly craft the perfect application.
 
-Benchmarks
-------------
+## Benchmarks
 
 [This Benchmark suite](https://github.com/smallnest/go-web-framework-benchmark) aims to compare the whole HTTP request processing between Go web frameworks.
 
-![Benchmark Wizzard Processing Time Horizontal Graph](https://raw.githubusercontent.com/iris-contrib/website/cf71811e6acb2f9bf1e715e25660392bf090b923/assets/benchmark_horizontal_transparent.png)
+**New results just came out:**
 
-[Please click here to view all detailed benchmarks.](https://github.com/smallnest/go-web-framework-benchmark)
+![Benchmark Wizzard July 21, 2016- Processing Time Horizontal Graph](https://raw.githubusercontent.com/smallnest/go-web-framework-benchmark/4db507a22c964c9bc9774c5b31afdc199a0fe8b7/benchmark.png)
+
+**The results have been updated on July 21, 2016**
+
+[Please click here to view all detailed benchmarks.](https://github.com/smallnest/go-web-framework-benchmark/commit/4db507a22c964c9bc9774c5b31afdc199a0fe8b7)
 
 Testing
 ------------
 
-Tests are located to the [iris-contrib/tests repository](https://github.com/iris-contrib/tests), community should write some code there!
+Community should write third-party or iris base tests to the [iris-contrib/tests repository](https://github.com/iris-contrib/tests).
 I recommend writing your API tests using this new library, [httpexpect](https://github.com/gavv/httpexpect) which supports Iris and fasthttp now, after my request [here](https://github.com/gavv/httpexpect/issues/2).
 
 Versioning
 ------------
 
-Current: **v3.0.0-rc.4**
+Current: **v4.0.0-alpha.4**
+
 >  Iris is an active project
-
-
-Read more about Semantic Versioning 2.0.0
-
- - http://semver.org/
- - https://en.wikipedia.org/wiki/Software_versioning
- - https://wiki.debian.org/UpstreamGuide#Releases_and_Versions
 
 
 Todo
 ------------
-> for the next release 'v3'
+> for 'v4'
 
-- [x] [Dynamic/Wildcard subdomains](https://kataras.gitbooks.io/iris/content/subdomains.html).
-- [x] Create server & client side (js) library for .on('event', func action(...)) / .emit('event')... (like socket.io but supports only websocket).
-- [x] Create a view system supporting different types of template engines.
-- [x] Extend, test and publish to the public the [Iris' cmd](https://github.com/kataras/iris/tree/master/iris).
-- [ ] Complete the front-end API tests [inside the iris-contrib]
-If you're willing to donate click [here](DONATIONS.md)!
+- [x] Refactor & extend view engine, separate the engines from the main code base, easier for the community to create new view engines[*](https://github.com/iris-contrib/template)
+- [x] Refactor & extend sessions, split the different databases functionality to the iris-contrib[*](https://github.com/iris-contrib/sessiondb)
+- [x] Refactor & extends the rest render engine in order to be able to developer to use their own implemention for rendering restful types, like, for example a  custom JSON implementation using no-standard go package for encode/decode[*](https://github.com/iris-contrib/response)
+- [x] Move the iris/websocket package's source code inside iris/websocket.go one file, to be easier to use by users without import a new package[*](https://github.com/kataras/iris/blob/master/websocket.go)
+- [ ] configs package should be removed after all these, we will not need big configurations because of different packages splitted & moved to the iris-contrib, we will keep interfaces and all required things inside kataras/iris.go.
+- [ ] Implement all [opened community's feature requests](https://github.com/kataras/iris/issues?q=is%3Aissue+is%3Aopen+label%3A%22feature+request%22)
+- [ ] Extend i18n middleware for easier and better internalization support
+- [ ] Create a router as optional plugin, for optional path parts. Its name, 'ryan', taken from the community-member and donator who requested this feature
+- [ ] Extend the iris control plugin
+- [x] Remove deprecated functions
+- [ ] Will think more :)
+
+If you're **willing to donate** click [here](DONATIONS.md)!
 
 People
 ------------
-A big thanks goes to [all people](https://github.com/kataras/iris/issues?utf8=%E2%9C%93&q=label%3A%22feature+request%22) who help building this framework with feature-requests & bug reports!
+The big thanks goes to [all people](https://github.com/kataras/iris/issues?utf8=%E2%9C%93&q=label%3A%22feature+request%22) who help building this framework with feature-requests & bug reports!
 
 The author of Iris is [@kataras](https://github.com/kataras).
 
@@ -184,16 +175,27 @@ Contributing
 ------------
 If you are interested in contributing to the Iris project, please see the document [CONTRIBUTING](https://github.com/kataras/iris/blob/master/CONTRIBUTING.md).
 
-
-Third-Party Licenses
-------------
-
-Third-Party Licenses can be found [here](THIRDPARTY-LICENSE.md)
-
-
 License
 ------------
 
 This project is licensed under the MIT License.
 
 License can be found [here](LICENSE).
+
+[Travis Widget]: https://img.shields.io/travis/kataras/iris.svg?style=flat-square
+[Travis]: http://travis-ci.org/kataras/iris
+[License Widget]: https://img.shields.io/badge/license-MIT%20%20License%20-E91E63.svg?style=flat-square
+[License]: https://github.com/kataras/iris/blob/master/LICENSE
+[Release Widget]: https://img.shields.io/badge/release-v4.0.0--alpha.4-blue.svg?style=flat-square
+[Release]: https://github.com/kataras/iris/releases
+[Chat Widget]: https://img.shields.io/badge/community-chat-00BCD4.svg?style=flat-square
+[Chat]: https://kataras.rocket.chat/channel/iris
+[ChatMain]: https://kataras.rocket.chat/channel/iris
+[ChatAlternative]: https://gitter.im/kataras/iris
+[Report Widget]: https://img.shields.io/badge/report%20card-A%2B-F44336.svg?style=flat-square
+[Report]: http://goreportcard.com/report/kataras/iris
+[Documentation Widget]: https://img.shields.io/badge/documentation-reference-5272B4.svg?style=flat-square
+[Documentation]: https://www.gitbook.com/book/kataras/iris/details
+[Language Widget]: https://img.shields.io/badge/powered_by-Go-3362c2.svg?style=flat-square
+[Language]: http://golang.org
+[Platform Widget]: https://img.shields.io/badge/platform-Any--OS-gray.svg?style=flat-square
