@@ -8,6 +8,7 @@ package main
 import (
 	"fmt"
 	"math"
+	"time"
 )
 
 type B struct {
@@ -34,9 +35,17 @@ func main() {
 	b2.change()
 	fmt.Println(b2.write())
 
+
+
+	start := time.Now()
 	//值拷贝
 	p3:=Point3{3,4,5}
 	p3.Abs();
+	end := time.Now()
+	delta := end.Sub(start)
+
+	fmt.Println("addTime====", delta)
+
 
 
 }
