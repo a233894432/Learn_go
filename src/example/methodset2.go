@@ -44,9 +44,9 @@ func main() {
 	// cannot use lst (type List) as type Appender in argument to CountInto:
 	//       List does not implement Appender (Append method has pointer receiver)
 
- 	alist:=[]int{1,2,3,4,5,6,7,8}
-	lst=alist[:]
-	 //CountInto(lst, 1, 10)
+	alist := []int{1, 2, 3, 4, 5, 6, 7, 8}
+	lst = alist[:]
+	//CountInto(lst, 1, 10)
 	fmt.Println(lst.Len())
 	fmt.Println(lst)
 	if LongEnough(lst) { // VALID:Identical receiver type
@@ -62,6 +62,7 @@ func main() {
 		fmt.Printf("- plst is long enough\n")
 	}
 }
+
 /*
 讨论
 
@@ -92,4 +93,4 @@ Go 语言规范定义了接口方法集的调用规则：
 类型 T 的可调用方法集不包含接受者为 *T 的方法
 
 
- */
+*/
