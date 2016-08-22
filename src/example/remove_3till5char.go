@@ -3,35 +3,47 @@ Project:Learn_go
 Time:2016/8/20-16:18
 author:Dio
 */
+// remove_first6char.go
 package main
 
 import (
 	"bufio"
 	"fmt"
-	"os"
 	"io"
+	"os"
 )
 
 func main() {
-	inputFile, _ := os.Open("goprogram.go")
-	outputFile, _ := os.OpenFile("goprogramT.go", os.O_WRONLY|os.O_CREATE, 0666)
+	inputFile, _ := os.Open("goprogram")
+	outputFile, _ := os.OpenFile("goprogramT", os.O_WRONLY|os.O_CREATE, 0666)
 	defer inputFile.Close()
 	defer outputFile.Close()
 	inputReader := bufio.NewReader(inputFile)
 	outputWriter := bufio.NewWriter(outputFile)
-	for {
-		inputString, _, readerError := inputReader.ReadLine()
-		if readerError == io.EOF {
-			fmt.Println("EOF")
-			return
-		}
-		outputString := string([]byte(inputString)[2:5]) + "\r\n"
-		n, err := outputWriter.WriteString(outputString)
-		if err != nil {
-			fmt.Println(err)
-			return
-		}
-		fmt.Println(n)
+	inputString, _, readerError := inputReader.ReadLine()
+	inputString, _, readerError := inputReader.ReadLine()
+	if readerError == io.EOF {
+		fmt.Println("EOF")
+		break
 	}
+
+	//for {
+	//	// inputString, readerError := inputReader.ReadString('\n')
+	//	inputString, _, readerError := inputReader.ReadLine()
+	//	if readerError == io.EOF {
+	//		fmt.Println("EOF")
+	//		break
+	//	}
+	//	//fmt.Printf("The input was: --%s--", inputString)
+	//	outputString := string([]byte(inputString)[2:5]) + "\r\n"
+	//	//fmt.Printf("The output was: --%s--", outputString)
+	//	_, err := outputWriter.WriteString(outputString)
+	//	//fmt.Printf("Number of bytes written %d\n", n)
+	//	if (err != nil) {
+	//		fmt.Println(err)
+	//		return
+	//	}
+	//}
+	//outputWriter.Flush()
 	fmt.Println("Conversion done")
 }
