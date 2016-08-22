@@ -1,7 +1,7 @@
 /*
 Project:Learn_go
 Time:2016/8/16-10:39
-author:Dio
+Author:Dio
 */
 /*
 	7.1.2 数组常量
