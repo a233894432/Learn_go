@@ -23,10 +23,15 @@ func (pc PhoneConnecter) Connect()  {
 
 func  main()  {
 	var a USB
-	a=PhoneConnecter{"PhoneConnecter"}
+	a=PhoneConnecter{"PhoneConnecterE"}
 
 	a.Connect()
 	Disconnect(a)
+	/** OUT
+	Connect:: PhoneConnecter
+	Disconnect PhoneConnecter
+	 */
+
 }
 
 func Disconnect(usb interface{})  {
