@@ -1,4 +1,7 @@
 *.exe
+*.a
 bin/
 .idea/
 .DS_Store
+pkg/
+.vscode/

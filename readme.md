@@ -4,7 +4,7 @@ Go 语言学习资料与社区索引
 
 鉴于之前有人做的 [索引资料](https://github.com/wonderfo/wonderfogo/wiki) 已经过期超过 2 年，所以特开此坑。各位同学可以通过发起 Fork + Pull Request 的方式进行补充和更新。
 
-**最后更新时间**：2016 年 01 月 05 日
+**最后更新时间**：2016年9月14日16:34:01
 
 ## 交流社区
 
@@ -89,6 +89,7 @@ Go 语言学习资料与社区索引
     - [《Go Web 编程》](https://github.com/astaxie/build-web-application-with-golang)
     - [《Go语言博客实践》](https://github.com/achun/Go-Blog-In-Action)
     - [《Go语言学习笔记》](https://github.com/qyuhen/book)
+    - [《Go学习笔记-极客学院的》](http://wiki.jikexueyuan.com/project/the-go-study-notes-fourth-edition/)
 - 翻译：
     - [Effective Go](https://golang.org/doc/effective_go.html)英文版:=>[Effective Go ](http://www.hellogcc.org/effective_go.html)中文版
     - [The Way to Go](https://github.com/Unknwon/the-way-to-go_ZH_CN):中文版
