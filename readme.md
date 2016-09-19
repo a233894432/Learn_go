@@ -2,7 +2,8 @@ Go 语言学习资料与社区索引
 ==============
 
 
-鉴于之前有人做的 [索引资料](https://github.com/wonderfo/wonderfogo/wiki) 已经过期超过 2 年，所以特开此坑。各位同学可以通过发起 Fork + Pull Request 的方式进行补充和更新。
+鉴于之前有人做的 [索引资料](https://github.com/wonderfo/wonderfogo/wiki) 已经过期超过 2 年，所以特开此坑。
+各位同学可以通过发起 Fork + Pull Request 的方式进行补充和更新。
 
 **最后更新时间**：2016年9月14日16:34:01
 
@@ -29,7 +30,8 @@ Go 语言学习资料与社区索引
 - [golang-nuts 邮件列表](https://groups.google.com/forum/#!forum/golang-nuts)：Go 语言官方指定邮件列表讨论区
 - [Go+ 社区](https://plus.google.com/u/0/communities/114112804251407510571)：Go 语言官方指定 G+ 社区
 - [Go+ google社区](https://groups.google.com/forum/#!forum/golang-dev)：Go 语言官方指定 Go -dev 开发社区
-
+- [Go+ stackoverflow](http://stackoverflow.com/questions/tagged/go) :  stackoverflow  GO问答社区
+ 
 ## 网址导航
 
 - 官方：
@@ -135,3 +137,4 @@ Go 语言学习资料与社区索引
 - Go/Golang jobs：
     - 官方网站：http://www.golangprojects.com/
     - Twitter: [@golangprojects](https://twitter.com/golangprojects) 
+
