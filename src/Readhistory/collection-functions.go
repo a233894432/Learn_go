@@ -92,30 +92,32 @@ func Map(vs []string, f func(string) string) []string {
 func main() {
 
 	// Here we try out our various collection functions.
-	var strs = []string{"peach", "apple", "pear", "plum"}
+	var strs = []string{"peach", "apple", "pear", "elum"}
 
 	fmt.Println(Index(strs, "pear"))     // 2 当有pear并返回序号
 	fmt.Println(Index(strs, "plum"))     // 3
 	fmt.Println(Include(strs, "apples")) // false
 	fmt.Println(Include(strs, "plum"))   //  true
 
+	fmt.Println("--Any--")
+	// 判断strs 中有无,前缀 是"p" 的
 	fmt.Println(Any(strs, func(v string) bool {
-		return strings.HasPrefix(v, "e")
+		return strings.HasPrefix(v, "p")
 	}))
-
-	//fmt.Println(All(strs, func(v string) bool {
-	//	return strings.HasPrefix(v, "p")
-	//}))
-	//
-	//fmt.Println(Filter(strs, func(v string) bool {
-	//	return strings.Contains(v, "e")
-	//}))
+	fmt.Println("--All--")
+	// 判断strs 中,前缀 都是是"p" 的
+	fmt.Println(All(strs, func(v string) bool {
+		return strings.HasPrefix(v, "p")
+	}))
+	fmt.Println("--Filter--")
+	//判断strs 中,是否包含 e,并打印出来
+	fmt.Println(Filter(strs, func(v string) bool {
+		return strings.Contains(v, "e")
+	}))
 
 	// The above examples all used anonymous functions,
 	// but you can also use named functions of the correct
 	// type.
-
-
-	//fmt.Println(Map(strs, strings.ToUpper))
+	fmt.Println(Map(strs, strings.ToUpper))
 
 }
