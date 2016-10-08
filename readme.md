@@ -63,8 +63,10 @@ Go 语言学习资料与社区索引
 - 学习站点：
     - [Go by Example](https://gobyexample.com/)
     - [Go database/sql tutorial](http://go-database-sql.org/)
+    - [GO 学习笔记](http://wiki.jikexueyuan.com/project/the-go-study-notes-fourth-edition/language.html)
 - 支持 Go 的云平台：
     - [Koding](https://koding.com/)
+    - [herokuapp](https://herokuapp.com/)
     - [Nitrous.IO](https://www.nitrous.io/)
     - [Get up and running with Go on Google Cloud Platform]( https://cloud.google.com/go/)
     - [AWS SDK for Go - Developer Preview](http://aws.amazon.com/cn/sdk-for-go/):=>[github](https://github.com/aws/aws-sdk-go)
