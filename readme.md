@@ -66,6 +66,7 @@ Go 语言学习资料与社区索引
     - [GO 学习笔记](http://wiki.jikexueyuan.com/project/the-go-study-notes-fourth-edition/language.html)
 - 支持 Go 的云平台：
     - [Koding](https://koding.com/)
+    - [Wide](https://wide.b3log.org/)
     - [herokuapp](https://herokuapp.com/)
     - [Nitrous.IO](https://www.nitrous.io/)
     - [Get up and running with Go on Google Cloud Platform]( https://cloud.google.com/go/)
