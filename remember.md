@@ -7,7 +7,7 @@ src/github.com 为包目录
 src/golang.com 为网络包目录 
 src/mymath   为自写模块目录 
 src/ example     为 学习的一些实例
-
+src/myexample  一些实例代码段
 
 
 - Readhistory 学习笔记 - 2016年9月19日10:36:44

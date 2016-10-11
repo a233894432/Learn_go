@@ -1,7 +1,6 @@
-
 // Single line comment
 /* Multi-
- line comment */
+line comment */
 
 // A package clause starts every source file.
 // Main is a special name declaring an executable rather than a library.
@@ -36,7 +35,7 @@ func beyondHello() {
 	y := 4
 	sum, prod := learnMultiple(x, y)        // Function returns two values.
 	fmt.Println("sum:", sum, "prod:", prod) // Simple output.
-	learnTypes()                            // < y minutes, learn more!
+	// learnTypes()                            // < y minutes, learn more!
 }
 
 /* <- multiline comment
@@ -85,16 +84,16 @@ can include line breaks.` // Same string type.
 	// To append elements to a slice, the built-in append() function is used.
 	// First argument is a slice to which we are appending. Commonly,
 	// the array variable is updated in place, as in example below.
-	s := []int{1, 2, 3}		// Result is a slice of length 3.
-	s = append(s, 4, 5, 6)	// Added 3 elements. Slice now has length of 6.
-	fmt.Println(s) // Updated slice is now [1 2 3 4 5 6]
+	s := []int{1, 2, 3}    // Result is a slice of length 3.
+	s = append(s, 4, 5, 6) // Added 3 elements. Slice now has length of 6.
+	fmt.Println(s)         // Updated slice is now [1 2 3 4 5 6]
 
 	// To append another slice, instead of list of atomic elements we can
 	// pass a reference to a slice or a slice literal like this, with a
 	// trailing ellipsis, meaning take a slice and unpack its elements,
 	// appending them to slice s.
 	s = append(s, []int{7, 8, 9}...) // Second argument is a slice literal.
-	fmt.Println(s)	// Updated slice is now [1 2 3 4 5 6 7 8 9]
+	fmt.Println(s)                   // Updated slice is now [1 2 3 4 5 6 7 8 9]
 
 	p, q := learnMemory() // Declares p, q to be type pointer to int.
 	fmt.Println(*p, *q)   // * follows a pointer. This prints two ints.
@@ -158,8 +157,8 @@ func learnFlowControl() {
 	case 42:
 		// Cases don't "fall through".
 		/*
-		There is a `fallthrough` keyword however, see:
-		  https://github.com/golang/go/wiki/Switch#fall-through
+			There is a `fallthrough` keyword however, see:
+			  https://github.com/golang/go/wiki/Switch#fall-through
 		*/
 	case 43:
 		// Unreached.

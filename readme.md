@@ -2,10 +2,7 @@ Go 语言学习资料与社区索引
 ==============
 
 
-鉴于之前有人做的 [索引资料](https://github.com/wonderfo/wonderfogo/wiki) 已经过期超过 2 年，所以特开此坑。
-各位同学可以通过发起 Fork + Pull Request 的方式进行补充和更新。
-
-**最后更新时间**：2016年9月14日16:34:01
+**最后更新时间**：2016年10月11日11:01:17
 
 ## 交流社区
 
@@ -36,23 +33,29 @@ Go 语言学习资料与社区索引
 
 - 官方：
     - [Playground](http://play.golang.org)：Go 语言代码在线运行
+
 - 国内镜像：
     - [Go 指南国内镜像](http://tour.golangtc.com/)
     - [Go 语言国内下载镜像](http://www.golangtc.com/download)
     - [Go 官方网站国内镜像](http://docs.studygolang.com/)
+
 - Web 框架：
     - [Macaron](https://go-macaron.com/)：模块化 Web 框架
     - [Beego](http://beego.me/)：重量级 Web 框架
     - [Revel](https://github.com/revel/revel)：较早成熟的重量级 Web 框架
     - [Martini](https://github.com/go-martini/martini): 一个强大为了编写模块化 Web 应用而生的 Go 语言框架
+
 - ORM 以及数据库驱动：
     - [xorm](https://github.com/go-xorm/xorm)：支持 MySQL、PostgreSQL、SQLite3 以及 MsSQL
     - [mgo](http://labix.org/mgo)：MongoDB 官方推荐驱动
+
 - 辅助站点：
     - [Go Walker](https://gowalker.org)：Go 语言在线 API 文档
     - [gobuild.io](http://gobuild.io/)：Go 语言在线二进制编译与下载
     - [Rego](http://regoio.herokuapp.com/)：Go 语言正则在线测试
     - [gopm.io](https://gopm.io)：科学下载第三方包
+    - [gofragments](http://www.gofragments.net/): 一些实例
+    
 - 开发工具：
     - [Emacs24](http://ftp.gnu.org/gnu/emacs/)：[配置脚本](https://github.com/wackonline/hack/blob/master/install-mint-dev/install-emacs.d.sh) / [(中文社区)](http://emacser.com/)
     - [LiteIDE](https://github.com/visualfc/liteide)
@@ -60,10 +63,12 @@ Go 语言学习资料与社区索引
     - [IntelliJ IDEA](http://www.jetbrains.com/idea/)
     - [Atom](https://atom.io)：[配置插件](https://atom.io/packages/go-plus)（感觉还不错，类似 Sublime，配置比较简单）
     - [VIM](http://www.vim.org)：[配置插件](https://github.com/humiaozuzu/dot-vimrc)（嫌 vim 配置麻烦的童鞋可以直接用这个）
+
 - 学习站点：
     - [Go by Example](https://gobyexample.com/)
     - [Go database/sql tutorial](http://go-database-sql.org/)
     - [GO 学习笔记](http://wiki.jikexueyuan.com/project/the-go-study-notes-fourth-edition/language.html)
+
 - 支持 Go 的云平台：
     - [Koding](https://koding.com/)
     - [Wide](https://wide.b3log.org/)
@@ -76,6 +81,7 @@ Go 语言学习资料与社区索引
         - [Create Azure Web app with GoLang extension](https://azure.microsoft.com/zh-cn/documentation/templates/101-webapp-with-golang/)
     - [Qiniu](https://www.qiniu.com)
         - [Qiniu SDK for Go](http://developer.qiniu.com/docs/v6/sdk/go-sdk.html):=>[github](https://github.com/qiniu/api.v6)
+
 - 其它站点：
     - [Golang 杂志](https://flipboard.com/section/the-golang-magazine-bJ1GqB)：[订阅说明](http://bbs.go-china.org/post/476)
     - [Reddit](http://www.reddit.com/r/golang/)
@@ -95,10 +101,12 @@ Go 语言学习资料与社区索引
     - [《Go语言博客实践》](https://github.com/achun/Go-Blog-In-Action)
     - [《Go语言学习笔记》](https://github.com/qyuhen/book)
     - [《Go学习笔记-极客学院的》](http://wiki.jikexueyuan.com/project/the-go-study-notes-fourth-edition/)
+
 - 翻译：
     - [Effective Go](https://golang.org/doc/effective_go.html)英文版:=>[Effective Go ](http://www.hellogcc.org/effective_go.html)中文版
     - [The Way to Go](https://github.com/Unknwon/the-way-to-go_ZH_CN):中文版
     - [《Learning Go》](https://github.com/miekg/gobook)英文版:=>[《Learning Go》](https://github.com/mikespook/Learning-Go-zh-cn)中文版
+
 - 教程：
     - [《Go编程基础》](https://github.com/Unknwon/go-fundamental-programming)
     - [《Go Web基础》](https://github.com/Unknwon/go-web-foundation)
@@ -113,6 +121,7 @@ Go 语言学习资料与社区索引
     - [Go Code Convention](https://github.com/Unknwon/go-code-convention)：无闻的 Go 语言编码规范
     - [GopherCon 2014](https://github.com/gophercon/2014-talks)
     - [GopherCon 2015](https://github.com/gophercon/2015-talks)
+
 - 书籍：
     - [Network programming with Go](http://jan.newmarch.name/go/)：[中文版](https://github.com/astaxie/NPWG_zh)
     - [Practical Cryptography With Go](https://leanpub.com/gocrypto/read#leanpub-auto-select-bibliography)
@@ -126,13 +135,17 @@ Go 语言学习资料与社区索引
 
 - 基础：
     - Go Slices and Bytes - Shakeel Mahate：[优酷视频](http://v.youku.com/v_show/id_XNjkzMjM1Mjg4.html) - [Youtube](http://www.youtube.com/watch?v=dKlNSIUSfz0)
+
 - COSCUP 2013:
     - Golang & ORM - 林佑安：[优酷视频](http://v.youku.com/v_show/id_XNjkzMTQ1MjYw.html) - [Youtube](http://www.youtube.com/watch?v=VwAtYGyjTks)
+
 - GopherCon：
     - 2014：[Youtube](https://www.youtube.com/playlist?list=PL2ntRZ1ySWBcD_BiJiDJUcyrb2w3bTulF)
     - 2015：[Youtube](https://www.youtube.com/playlist?list=PL2ntRZ1ySWBf-_z-gHCOR2N156Nw930Hm)
+
 - Golang UK Conference：
     - 2015：[Youtube](https://www.youtube.com/playlist?list=PLDWZ5uzn69ezRJYeWxYNRMYebvf8DerHd)
+
 - GopherCon India 2015: [Youtube](https://www.youtube.com/playlist?list=PLxFC1MYuNgJTY3uQ5Ja4F5Sz305nnrBOq)
 
 ## 职业信息
