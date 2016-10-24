@@ -21,22 +21,67 @@ package main
 
 import "fmt"
 
-func test(fn func() int) int {
-	return fn()
-}
+func add(x, y int) (z int) {
+	defer func() {
+		println(z + 2) // 输出: 203
+	}()
 
-type FormatFunc func(s string, x, y int) string // 定义函数类型。
-
-func format(fn FormatFunc, s string, x, y int) string {
-	return fn(s, x, y)
+	z = x + y
+	return z + 200 // 执行顺序: (z = z + 200) -> (call defer) -> (ret)
 }
 
 func main() {
-	s1 := test(func() int { return 100 }) // 直接将匿名函数当参数。
+	println(add(1, 2)) // 输出: 203
+	f := test()        //x (0x2101ef018) = 100
+	f()                //x (0x2101ef018) = 100
 
-	s2 := format(func(s string, x, y int) string {
-		return fmt.Sprintf(s, x, y)
-	}, "%d, %d", 10, 20)
+}
 
-	println(s1, s2)
+/*
+3.4 匿名函数
+匿名函数可赋值给变量，做为结构字段，或者在 channel 里传送。
+// --- function variable ---
+
+fn := func() { println("Hello, World!") }
+fn()
+
+// --- function collection ---
+fns := [](func(x int) int){
+
+    func(x int) int { return x + 1 },
+    func(x int) int { return x + 2 },
+}
+
+println(fns[0](100))
+
+// --- function as field ---
+
+d := struct {
+    fn func() string
+}{
+    fn: func() string { return "Hello, World!" },
+}
+
+println(d.fn())
+
+// --- channel of function ---
+
+fc := make(chan func() string, 2)
+fc <- func() string { return "Hello, World!" }
+println((<-fc)())
+// ------function-----
+
+   闭包:
+   在汇编层面，test 实际返回的是 FuncVal 对象，其中包含了匿名函数地址、闭包对象指针。当调用匿名函数时，只需以某个寄存器传递该对象即可。
+
+    FuncVal { func_address, closure_var_pointer ... }
+
+*/
+func test() func() {
+	x := 100
+	fmt.Printf("x (%p) = %d\n", &x, x)
+
+	return func() {
+		fmt.Printf("x (%p) = %d\n", &x, x)
+	}
 }
