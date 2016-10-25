@@ -9,6 +9,7 @@ type Person struct {
 	Age    int
 	Emails []string
 	Jobs   []*Job
+	
 }
 
 type Job struct {
